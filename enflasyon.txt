@@ -1,0 +1,748 @@
+local function LoadCurrencyScript()
+    if not game:IsLoaded() then
+        game.Loaded:Wait()
+    end
+    repeat task.wait(.06) until game:GetService("Players").LocalPlayer
+    
+    local Http = game:GetService("HttpService")
+    local Players = game:GetService("Players")
+    local CoreGui = game:GetService("CoreGui")
+    local UserInputService = game:GetService("UserInputService")
+    local TweenService = game:GetService("TweenService")
+    local LP = Players.LocalPlayer
+    
+    local currencyData = {
+        {Code = "USD", Name = "United States Dollar", Symbol = "$"},
+        {Code = "TRY", Name = "Turkish Lira", Symbol = "₺"},
+        {Code = "EUR", Name = "Euro", Symbol = "€"},
+        {Code = "GBP", Name = "British Pound", Symbol = "£"},
+        {Code = "JPY", Name = "Japanese Yen", Symbol = "¥"},
+        {Code = "CAD", Name = "Canadian Dollar", Symbol = "C$"},
+        {Code = "AUD", Name = "Australian Dollar", Symbol = "A$"},
+        {Code = "CHF", Name = "Swiss Franc", Symbol = "CHF"},
+        {Code = "CNY", Name = "Chinese Yuan", Symbol = "¥"},
+        {Code = "RUB", Name = "Russian Ruble", Symbol = "₽"},
+        {Code = "INR", Name = "Indian Rupee", Symbol = "₹"},
+        {Code = "BRL", Name = "Brazilian Real", Symbol = "R$"},
+        {Code = "KRW", Name = "South Korean Won", Symbol = "₩"},
+        {Code = "MXN", Name = "Mexican Peso", Symbol = "$"},
+        {Code = "IDR", Name = "Indonesian Rupiah", Symbol = "Rp"},
+        {Code = "SAR", Name = "Saudi Riyal", Symbol = "﷼"},
+        {Code = "AED", Name = "UAE Dirham", Symbol = "د.إ"},
+        {Code = "IQD", Name = "Iraqi Dinar", Symbol = "ع.د"},
+        {Code = "AFN", Name = "Afghan Afghani", Symbol = "؋"},
+        {Code = "ALL", Name = "Albanian Lek", Symbol = "L"},
+        {Code = "AMD", Name = "Armenian Dram", Symbol = "֏"},
+        {Code = "ANG", Name = "Netherlands Antillian Guilder", Symbol = "ƒ"},
+        {Code = "AOA", Name = "Angolan Kwanza", Symbol = "Kz"},
+        {Code = "ARS", Name = "Argentine Peso", Symbol = "$"},
+        {Code = "AWG", Name = "Aruban Florin", Symbol = "ƒ"},
+        {Code = "AZN", Name = "Azerbaijani Manat", Symbol = "₼"},
+        {Code = "BAM", Name = "Bosnia and Herzegovina Mark", Symbol = "KM"},
+        {Code = "BBD", Name = "Barbados Dollar", Symbol = "$"},
+        {Code = "BDT", Name = "Bangladeshi Taka", Symbol = "৳"},
+        {Code = "BGN", Name = "Bulgarian Lev", Symbol = "лв"},
+        {Code = "BHD", Name = "Bahraini Dinar", Symbol = ".د.ب"},
+        {Code = "BIF", Name = "Burundian Franc", Symbol = "FBu"},
+        {Code = "BMD", Name = "Bermudian Dollar", Symbol = "$"},
+        {Code = "BND", Name = "Brunei Dollar", Symbol = "$"},
+        {Code = "BOB", Name = "Bolivian Boliviano", Symbol = "Bs."},
+        {Code = "BSD", Name = "Bahamian Dollar", Symbol = "$"},
+        {Code = "BTN", Name = "Bhutanese Ngultrum", Symbol = "Nu."},
+        {Code = "BWP", Name = "Botswana Pula", Symbol = "P"},
+        {Code = "BYN", Name = "Belarusian Ruble", Symbol = "Br"},
+        {Code = "BZD", Name = "Belize Dollar", Symbol = "BZ$"},
+        {Code = "CDF", Name = "Congolese Franc", Symbol = "FC"},
+        {Code = "CLP", Name = "Chilean Peso", Symbol = "$"},
+        {Code = "COP", Name = "Colombian Peso", Symbol = "$"},
+        {Code = "CRC", Name = "Costa Rican Colon", Symbol = "₡"},
+        {Code = "CUP", Name = "Cuban Peso", Symbol = "$"},
+        {Code = "CVE", Name = "Cape Verdean Escudo", Symbol = "$"},
+        {Code = "CZK", Name = "Czech Koruna", Symbol = "Kč"},
+        {Code = "DJF", Name = "Djiboutian Franc", Symbol = "Fdj"},
+        {Code = "DKK", Name = "Danish Krone", Symbol = "kr"},
+        {Code = "DOP", Name = "Dominican Peso", Symbol = "RD$"},
+        {Code = "DZD", Name = "Algerian Dinar", Symbol = "د.ج"},
+        {Code = "EGP", Name = "Egyptian Pound", Symbol = "£"},
+        {Code = "ERN", Name = "Eritrean Nakfa", Symbol = "Nfk"},
+        {Code = "ETB", Name = "Ethiopian Birr", Symbol = "Br"},
+        {Code = "FJD", Name = "Fiji Dollar", Symbol = "$"},
+        {Code = "FKP", Name = "Falkland Islands Pound", Symbol = "£"},
+        {Code = "FOK", Name = "Faroese Króna", Symbol = "kr"},
+        {Code = "GEL", Name = "Georgian Lari", Symbol = "₾"},
+        {Code = "GGP", Name = "Guernsey Pound", Symbol = "£"},
+        {Code = "GHS", Name = "Ghanaian Cedi", Symbol = "₵"},
+        {Code = "GIP", Name = "Gibraltar Pound", Symbol = "£"},
+        {Code = "GMD", Name = "Gambian Dalasi", Symbol = "D"},
+        {Code = "GNF", Name = "Guinean Franc", Symbol = "FG"},
+        {Code = "GTQ", Name = "Guatemalan Quetzal", Symbol = "Q"},
+        {Code = "GYD", Name = "Guyanese Dollar", Symbol = "$"},
+        {Code = "HKD", Name = "Hong Kong Dollar", Symbol = "$"},
+        {Code = "HNL", Name = "Honduran Lempira", Symbol = "L"},
+        {Code = "HRK", Name = "Croatian Kuna", Symbol = "kn"},
+        {Code = "HTG", Name = "Haitian Gourde", Symbol = "G"},
+        {Code = "HUF", Name = "Hungarian Forint", Symbol = "Ft"},
+        {Code = "IDR", Name = "Indonesian Rupiah", Symbol = "Rp"},
+        {Code = "ILS", Name = "Israeli New Shekel", Symbol = "₪"},
+        {Code = "IMP", Name = "Manx Pound", Symbol = "£"},
+        {Code = "ISK", Name = "Icelandic Króna", Symbol = "kr"},
+        {Code = "JEP", Name = "Jersey Pound", Symbol = "£"},
+        {Code = "JMD", Name = "Jamaican Dollar", Symbol = "J$"},
+        {Code = "JOD", Name = "Jordanian Dinar", Symbol = "JD"},
+        {Code = "KES", Name = "Kenyan Shilling", Symbol = "KSh"},
+        {Code = "KGS", Name = "Kyrgyzstani Som", Symbol = "с"},
+        {Code = "KHR", Name = "Cambodian Riel", Symbol = "៛"},
+        {Code = "KID", Name = "Kiribati Dollar", Symbol = "$"},
+        {Code = "KMF", Name = "Comorian Franc", Symbol = "CF"},
+        {Code = "KPW", Name = "North Korean Won", Symbol = "₩"},
+        {Code = "KWD", Name = "Kuwaiti Dinar", Symbol = "KD"},
+        {Code = "KYD", Name = "Cayman Islands Dollar", Symbol = "$"},
+        {Code = "KZT", Name = "Kazakhstani Tenge", Symbol = "₸"},
+        {Code = "LAK", Name = "Lao Kip", Symbol = "₭"},
+        {Code = "LBP", Name = "Lebanese Pound", Symbol = "L£"},
+        {Code = "LKR", Name = "Sri Lanka Rupee", Symbol = "Rs"},
+        {Code = "LRD", Name = "Liberian Dollar", Symbol = "$"},
+        {Code = "LSL", Name = "Lesotho Loti", Symbol = "L"},
+        {Code = "LYD", Name = "Libyan Dinar", Symbol = "LD"},
+        {Code = "MAD", Name = "Moroccan Dirham", Symbol = "MAD"},
+        {Code = "MDL", Name = "Moldovan Leu", Symbol = "L"},
+        {Code = "MGA", Name = "Malagasy Ariary", Symbol = "Ar"},
+        {Code = "MKD", Name = "Macedonian Denar", Symbol = "ден"},
+        {Code = "MMK", Name = "Burmese Kyat", Symbol = "K"},
+        {Code = "MNT", Name = "Mongolian Tögrög", Symbol = "₮"},
+        {Code = "MOP", Name = "Macanese Pataca", Symbol = "MOP$"},
+        {Code = "MRU", Name = "Mauritanian Ouguiya", Symbol = "UM"},
+        {Code = "MUR", Name = "Mauritian Rupee", Symbol = "Rs"},
+        {Code = "MVR", Name = "Maldivian Rufiyaa", Symbol = "Rf"},
+        {Code = "MWK", Name = "Malawian Kwacha", Symbol = "MK"},
+        {Code = "MYR", Name = "Malaysian Ringgit", Symbol = "RM"},
+        {Code = "MZN", Name = "Mozambican Metical", Symbol = "MT"},
+        {Code = "NAD", Name = "Namibian Dollar", Symbol = "$"},
+        {Code = "NGN", Name = "Nigerian Naira", Symbol = "₦"},
+        {Code = "NIO", Name = "Nicaraguan Córdoba", Symbol = "C$"},
+        {Code = "NOK", Name = "Norwegian Krone", Symbol = "kr"},
+        {Code = "NPR", Name = "Nepalese Rupee", Symbol = "Rs"},
+        {Code = "NZD", Name = "New Zealand Dollar", Symbol = "$"},
+        {Code = "OMR", Name = "Omani Rial", Symbol = "﷼"},
+        {Code = "PAB", Name = "Panamanian Balboa", Symbol = "B/."},
+        {Code = "PEN", Name = "Peruvian Sol", Symbol = "S/."},
+        {Code = "PGK", Name = "Papua New Guinean Kina", Symbol = "K"},
+        {Code = "PHP", Name = "Philippine Peso", Symbol = "₱"},
+        {Code = "PKR", Name = "Pakistani Rupee", Symbol = "Rs"},
+        {Code = "PLN", Name = "Polish Złoty", Symbol = "zł"},
+        {Code = "PYG", Name = "Paraguayan Guaraní", Symbol = "₲"},
+        {Code = "QAR", Name = "Qatari Riyal", Symbol = "QR"},
+        {Code = "RON", Name = "Romanian Leu", Symbol = "lei"},
+        {Code = "RSD", Name = "Serbian Dinar", Symbol = "din"},
+        {Code = "RWF", Name = "Rwandan Franc", Symbol = "FRw"},
+        {Code = "SBD", Name = "Solomon Islands Dollar", Symbol = "SI$"},
+        {Code = "SCR", Name = "Seychellois Rupee", Symbol = "SR"},
+        {Code = "SDG", Name = "Sudanese Pound", Symbol = "SDG"},
+        {Code = "SEK", Name = "Swedish Krona", Symbol = "kr"},
+        {Code = "SGD", Name = "Singapore Dollar", Symbol = "S$"},
+        {Code = "SHP", Name = "Saint Helena Pound", Symbol = "£"},
+        {Code = "SLE", Name = "Sierra Leonean Leone", Symbol = "Le"},
+        {Code = "SOS", Name = "Somali Shilling", Symbol = "Sh.So."},
+        {Code = "SRD", Name = "Surinamese Dollar", Symbol = "$"},
+        {Code = "SSP", Name = "South Sudanese Pound", Symbol = "SSP"},
+        {Code = "STN", Name = "São Tomé and Príncipe Dobra", Symbol = "Db"},
+        {Code = "SYP", Name = "Syrian Pound", Symbol = "LS"},
+        {Code = "SZL", Name = "Eswatini Lilangeni", Symbol = "E"},
+        {Code = "THB", Name = "Thai Baht", Symbol = "฿"},
+        {Code = "TJS", Name = "Tajikistani Somoni", Symbol = "SM"},
+        {Code = "TMT", Name = "Turkmenistan Manat", Symbol = "m"},
+        {Code = "TND", Name = "Tunisian Dinar", Symbol = "DT"},
+        {Code = "TOP", Name = "Tongan Paʻanga", Symbol = "T$"},
+        {Code = "TTD", Name = "Trinidad and Tobago Dollar", Symbol = "TT$"},
+        {Code = "TVD", Name = "Tuvaluan Dollar", Symbol = "$"},
+        {Code = "TZS", Name = "Tanzanian Shilling", Symbol = "TSh"},
+        {Code = "UAH", Name = "Ukrainian Hryvnia", Symbol = "₴"},
+        {Code = "UGX", Name = "Ugandan Shilling", Symbol = "USh"},
+        {Code = "UYU", Name = "Uruguayan Peso", Symbol = "$"},
+        {Code = "UZS", Name = "Uzbekistani So'm", Symbol = "so'm"},
+        {Code = "VES", Name = "Venezuelan Bolívar Soberano", Symbol = "Bs.S"},
+        {Code = "VND", Name = "Vietnamese Đồng", Symbol = "₫"},
+        {Code = "VUV", Name = "Vanuatu Vatu", Symbol = "VT"},
+        {Code = "WST", Name = "Samoan Tālā", Symbol = "WS$"},
+        {Code = "XAF", Name = "Central African CFA Franc", Symbol = "FCFA"},
+        {Code = "XCD", Name = "East Caribbean Dollar", Symbol = "$"},
+        {Code = "XDR", Name = "Special Drawing Rights", Symbol = "XDR"},
+        {Code = "XOF", Name = "West African CFA franc", Symbol = "CFA"},
+        {Code = "XPF", Name = "CFP Franc", Symbol = "₣"},
+        {Code = "YER", Name = "Yemeni Rial", Symbol = "YR"},
+        {Code = "ZAR", Name = "South African Rand", Symbol = "R"},
+        {Code = "ZMW", Name = "Zambian Kwacha", Symbol = "ZK"},
+        {Code = "ZWL", Name = "Zimbabwean Dollar", Symbol = "Z$"}
+    }
+    
+    local sourceCurrency = "TRY"
+    local targetCurrency = "USD"
+    
+    local gv
+    local function req(opt)
+        local fn = (syn and syn.request) or (http and http.request) or http_request or request
+        if fn then
+            return fn(opt)
+        end
+        return Http:RequestAsync(opt)
+    end
+    
+    local function consent(body)
+        local t = {}
+        for tag in body:gmatch('<input type="hidden" name=".-" value=".-">') do
+            local k, v = tag:match('<input type="hidden" name="(.-)" value="(.-)">')
+            t[k] = v
+        end
+        gv = t.v or ""
+    end
+    
+    local function got(url, method, body)
+        method = method or "GET"
+        local res = req({
+            Url = url,
+            Method = method,
+            Headers = {cookie = "CONSENT=YES+" .. (gv or "")},
+            Body = body
+        })
+        local b = res.Body or res.body or ""
+        if type(b) ~= "string" then
+            b = tostring(b)
+        end
+        if b:match("https://consent.google.com/s") then
+            consent(b)
+            res = req({
+                Url = url,
+                Method = "GET",
+                Headers = {cookie = "CONSENT=YES+" .. (gv or "")}
+            })
+        end
+        return res
+    end
+    
+    local function getExchangeRate(fromCurr, toCurr, amount)
+        amount = amount or 1
+        local url = "https://www.google.com/search?q=" .. amount .. "+" .. fromCurr .. "+to+" .. toCurr
+        local res = got(url)
+        local body = res.Body or res.body or ""
+        
+        local rate = body:match('"BFDAwe">(%d+%.?%d*)</span>')
+        if not rate then
+            rate = body:match('class="DFlfde SwHCTb" data%-value="(%d+%.?%d*)"')
+        end
+        if not rate then
+            rate = body:match('class="dDoNo vrNOv" data%-value="(%d+%.?%d*)"')
+        end
+        
+        if rate then
+            return tonumber(rate)
+        end
+        return nil
+    end
+    
+    local function findCurrencyByCode(code)
+        for _, currency in ipairs(currencyData) do
+            if currency.Code == code then
+                return currency
+            end
+        end
+        return currencyData[1]
+    end
+    
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "CurrencyConverterUI"
+    screenGui.Parent = CoreGui
+    screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    
+    local mainFrame = Instance.new("Frame")
+    mainFrame.Name = "MainFrame"
+    mainFrame.Parent = screenGui
+    mainFrame.BackgroundColor3 = Color3.fromRGB(32, 33, 36)
+    mainFrame.BorderSizePixel = 0
+    mainFrame.Position = UDim2.new(0.5, -175, 0.5, -150)
+    mainFrame.Size = UDim2.new(0, 350, 0, 320)
+    mainFrame.ClipsDescendants = true
+    mainFrame.Active = true
+    mainFrame.Draggable = true
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 16)
+    corner.Parent = mainFrame
+    
+    local header = Instance.new("Frame")
+    header.Name = "Header"
+    header.Parent = mainFrame
+    header.BackgroundColor3 = Color3.fromRGB(32, 33, 36)
+    header.BorderSizePixel = 0
+    header.Size = UDim2.new(1, 0, 0, 40)
+    
+    local headerCorner = Instance.new("UICorner")
+    headerCorner.CornerRadius = UDim.new(0, 16)
+    headerCorner.Parent = header
+    
+    local title = Instance.new("TextLabel")
+    title.Name = "Title"
+    title.Parent = header
+    title.BackgroundTransparency = 1
+    title.Position = UDim2.new(0, 15, 0, 0)
+    title.Size = UDim2.new(0, 200, 1, 0)
+    title.Font = Enum.Font.GothamBold
+    title.Text = "Currency Converter"
+    title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    title.TextSize = 16
+    title.TextXAlignment = Enum.TextXAlignment.Left
+    
+    local Gradient = Instance.new("UIGradient", title)
+    Gradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(100, 200, 255)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 255, 255)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 200, 255))
+    }
+    Gradient.Offset = Vector2.new(-1, 0)
+    Gradient.Rotation = 0
+    
+    local GradientTween = TweenService:Create(Gradient, TweenInfo.new(3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out, -1), {Offset = Vector2.new(1, 0)})
+    GradientTween:Play()
+    
+    local closeButton = Instance.new("TextButton")
+    closeButton.Name = "CloseButton"
+    closeButton.Parent = header
+    closeButton.BackgroundTransparency = 1
+    closeButton.Position = UDim2.new(1, -35, 0, 0)
+    closeButton.Size = UDim2.new(0, 35, 1, 0)
+    closeButton.Font = Enum.Font.GothamBold
+    closeButton.Text = "×"
+    closeButton.TextColor3 = Color3.fromRGB(232, 234, 237)
+    closeButton.TextSize = 20
+    
+    local contentFrame = Instance.new("Frame")
+    contentFrame.Name = "ContentFrame"
+    contentFrame.Parent = mainFrame
+    contentFrame.BackgroundTransparency = 1
+    contentFrame.Position = UDim2.new(0, 0, 0, 40)
+    contentFrame.Size = UDim2.new(1, 0, 1, -40)
+    
+    local inputFrame = Instance.new("Frame")
+    inputFrame.Name = "InputFrame"
+    inputFrame.Parent = contentFrame
+    inputFrame.BackgroundColor3 = Color3.fromRGB(48, 49, 52)
+    inputFrame.BorderSizePixel = 0
+    inputFrame.Position = UDim2.new(0, 15, 0, 15)
+    inputFrame.Size = UDim2.new(1, -30, 0, 100)
+    
+    local inputCorner = Instance.new("UICorner")
+    inputCorner.CornerRadius = UDim.new(0, 12)
+    inputCorner.Parent = inputFrame
+    
+    local sourceCurrencyButton = Instance.new("TextButton")
+    sourceCurrencyButton.Name = "SourceCurrencyButton"
+    sourceCurrencyButton.Parent = inputFrame
+    sourceCurrencyButton.BackgroundColor3 = Color3.fromRGB(60, 64, 67)
+    sourceCurrencyButton.BorderSizePixel = 0
+    sourceCurrencyButton.Position = UDim2.new(0, 10, 0, 10)
+    sourceCurrencyButton.Size = UDim2.new(0, 120, 0, 30)
+    sourceCurrencyButton.Font = Enum.Font.Gotham
+    sourceCurrencyButton.Text = "TRY - Turkish Lira"
+    sourceCurrencyButton.TextColor3 = Color3.fromRGB(232, 234, 237)
+    sourceCurrencyButton.TextSize = 12
+    
+    local sourceCorner = Instance.new("UICorner")
+    sourceCorner.CornerRadius = UDim.new(0, 8)
+    sourceCorner.Parent = sourceCurrencyButton
+    
+    local swapButton = Instance.new("TextButton")
+    swapButton.Name = "SwapButton"
+    swapButton.Parent = inputFrame
+    swapButton.BackgroundTransparency = 1
+    swapButton.Position = UDim2.new(0.5, -15, 0, 12)
+    swapButton.Size = UDim2.new(0, 30, 0, 30)
+    swapButton.Font = Enum.Font.GothamBold
+    swapButton.Text = "⇄"
+    swapButton.TextColor3 = Color3.fromRGB(138, 180, 248)
+    swapButton.TextSize = 16
+    
+    local targetCurrencyButton = Instance.new("TextButton")
+    targetCurrencyButton.Name = "TargetCurrencyButton"
+    targetCurrencyButton.Parent = inputFrame
+    targetCurrencyButton.BackgroundColor3 = Color3.fromRGB(60, 64, 67)
+    targetCurrencyButton.BorderSizePixel = 0
+    targetCurrencyButton.Position = UDim2.new(1, -130, 0, 10)
+    targetCurrencyButton.Size = UDim2.new(0, 120, 0, 30)
+    targetCurrencyButton.Font = Enum.Font.Gotham
+    targetCurrencyButton.Text = "USD - US Dollar"
+    targetCurrencyButton.TextColor3 = Color3.fromRGB(232, 234, 237)
+    targetCurrencyButton.TextSize = 12
+    
+    local targetCorner = Instance.new("UICorner")
+    targetCorner.CornerRadius = UDim.new(0, 8)
+    targetCorner.Parent = targetCurrencyButton
+    
+    local amountLabel = Instance.new("TextLabel")
+    amountLabel.Name = "AmountLabel"
+    amountLabel.Parent = inputFrame
+    amountLabel.BackgroundTransparency = 1
+    amountLabel.Position = UDim2.new(0, 10, 0, 50)
+    amountLabel.Size = UDim2.new(0, 80, 0, 20)
+    amountLabel.Font = Enum.Font.Gotham
+    amountLabel.Text = "Amount:"
+    amountLabel.TextColor3 = Color3.fromRGB(232, 234, 237)
+    amountLabel.TextSize = 12
+    amountLabel.TextXAlignment = Enum.TextXAlignment.Left
+    
+    local amountBox = Instance.new("TextBox")
+    amountBox.Name = "AmountBox"
+    amountBox.Parent = inputFrame
+    amountBox.BackgroundColor3 = Color3.fromRGB(40, 41, 44)
+    amountBox.BorderSizePixel = 0
+    amountBox.Position = UDim2.new(0, 80, 0, 50)
+    amountBox.Size = UDim2.new(1, -90, 0, 25)
+    amountBox.Font = Enum.Font.Gotham
+    amountBox.PlaceholderText = "Enter amount"
+    amountBox.PlaceholderColor3 = Color3.fromRGB(154, 160, 166)
+    amountBox.Text = "1"
+    amountBox.TextColor3 = Color3.fromRGB(232, 234, 237)
+    amountBox.TextSize = 12
+    amountBox.ClearTextOnFocus = false
+    
+    local amountCorner = Instance.new("UICorner")
+    amountCorner.CornerRadius = UDim.new(0, 6)
+    amountCorner.Parent = amountBox
+    
+    local convertButton = Instance.new("TextButton")
+    convertButton.Name = "ConvertButton"
+    convertButton.Parent = inputFrame
+    convertButton.BackgroundColor3 = Color3.fromRGB(138, 180, 248)
+    convertButton.BorderSizePixel = 0
+    convertButton.Position = UDim2.new(0.5, -40, 1, -35)
+    convertButton.Size = UDim2.new(0, 80, 0, 25)
+    convertButton.Font = Enum.Font.GothamBold
+    convertButton.Text = "CONVERT"
+    convertButton.TextColor3 = Color3.fromRGB(32, 33, 36)
+    convertButton.TextSize = 12
+    
+    local convertCorner = Instance.new("UICorner")
+    convertCorner.CornerRadius = UDim.new(0, 8)
+    convertCorner.Parent = convertButton
+    
+    local outputFrame = Instance.new("Frame")
+    outputFrame.Name = "OutputFrame"
+    outputFrame.Parent = contentFrame
+    outputFrame.BackgroundColor3 = Color3.fromRGB(48, 49, 52)
+    outputFrame.BorderSizePixel = 0
+    outputFrame.Position = UDim2.new(0, 15, 0, 130)
+    outputFrame.Size = UDim2.new(1, -30, 0, 120)
+    
+    local outputCorner = Instance.new("UICorner")
+    outputCorner.CornerRadius = UDim.new(0, 12)
+    outputCorner.Parent = outputFrame
+    
+    local resultLabel = Instance.new("TextLabel")
+    resultLabel.Name = "ResultLabel"
+    resultLabel.Parent = outputFrame
+    resultLabel.BackgroundTransparency = 1
+    resultLabel.Position = UDim2.new(0, 15, 0, 15)
+    resultLabel.Size = UDim2.new(1, -30, 0, 60)
+    resultLabel.Font = Enum.Font.Gotham
+    resultLabel.Text = "Enter amount and click CONVERT"
+    resultLabel.TextColor3 = Color3.fromRGB(154, 160, 166)
+    resultLabel.TextSize = 14
+    resultLabel.TextWrapped = true
+    resultLabel.TextXAlignment = Enum.TextXAlignment.Center
+    resultLabel.TextYAlignment = Enum.TextYAlignment.Center
+    
+    local rateLabel = Instance.new("TextLabel")
+    rateLabel.Name = "RateLabel"
+    rateLabel.Parent = outputFrame
+    rateLabel.BackgroundTransparency = 1
+    rateLabel.Position = UDim2.new(0, 15, 0, 80)
+    rateLabel.Size = UDim2.new(1, -30, 0, 20)
+    rateLabel.Font = Enum.Font.Gotham
+    rateLabel.Text = "Exchange rate: --"
+    rateLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+    rateLabel.TextSize = 11
+    rateLabel.TextXAlignment = Enum.TextXAlignment.Center
+    
+    local copyButton = Instance.new("TextButton")
+    copyButton.Name = "CopyButton"
+    copyButton.Parent = outputFrame
+    copyButton.BackgroundColor3 = Color3.fromRGB(138, 180, 248)
+    copyButton.BorderSizePixel = 0
+    copyButton.Position = UDim2.new(0.5, -35, 1, -30)
+    copyButton.Size = UDim2.new(0, 70, 0, 25)
+    copyButton.Font = Enum.Font.Gotham
+    copyButton.Text = "Copy"
+    copyButton.TextColor3 = Color3.fromRGB(32, 33, 36)
+    copyButton.TextSize = 12
+    
+    local copyCorner = Instance.new("UICorner")
+    copyCorner.CornerRadius = UDim.new(0, 8)
+    copyCorner.Parent = copyButton
+    
+    local leftCurrencyFrame = Instance.new("Frame")
+    leftCurrencyFrame.Name = "LeftCurrencyFrame"
+    leftCurrencyFrame.Parent = screenGui
+    leftCurrencyFrame.BackgroundColor3 = Color3.fromRGB(32, 33, 36)
+    leftCurrencyFrame.BorderSizePixel = 0
+    leftCurrencyFrame.Position = UDim2.new(0, 10, 0.5, -175)
+    leftCurrencyFrame.Size = UDim2.new(0, 300, 0, 400)
+    leftCurrencyFrame.Visible = false
+    leftCurrencyFrame.ZIndex = 2
+    leftCurrencyFrame.Active = true
+    leftCurrencyFrame.Draggable = true
+    
+    local leftCurrencyCorner = Instance.new("UICorner")
+    leftCurrencyCorner.CornerRadius = UDim.new(0, 20)
+    leftCurrencyCorner.Parent = leftCurrencyFrame
+    
+    local rightCurrencyFrame = Instance.new("Frame")
+    rightCurrencyFrame.Name = "RightCurrencyFrame"
+    rightCurrencyFrame.Parent = screenGui
+    rightCurrencyFrame.BackgroundColor3 = Color3.fromRGB(32, 33, 36)
+    rightCurrencyFrame.BorderSizePixel = 0
+    rightCurrencyFrame.Position = UDim2.new(1, -310, 0.5, -175)
+    rightCurrencyFrame.Size = UDim2.new(0, 300, 0, 400)
+    rightCurrencyFrame.Visible = false
+    rightCurrencyFrame.ZIndex = 2
+    rightCurrencyFrame.Active = true
+    rightCurrencyFrame.Draggable = true
+    
+    local rightCurrencyCorner = Instance.new("UICorner")
+    rightCurrencyCorner.CornerRadius = UDim.new(0, 20)
+    rightCurrencyCorner.Parent = rightCurrencyFrame
+    
+    local function createCurrencySelectionFrame(frame, isSource)
+        for _, child in ipairs(frame:GetChildren()) do
+            child:Destroy()
+        end
+        
+        local header = Instance.new("Frame")
+        header.Name = "Header"
+        header.Parent = frame
+        header.BackgroundColor3 = Color3.fromRGB(40, 41, 44)
+        header.BorderSizePixel = 0
+        header.Size = UDim2.new(1, 0, 0, 45)
+        
+        local headerCorner = Instance.new("UICorner")
+        headerCorner.CornerRadius = UDim.new(0, 20)
+        headerCorner.Parent = header
+        
+        local title = Instance.new("TextLabel")
+        title.Name = "Title"
+        title.Parent = header
+        title.BackgroundTransparency = 1
+        title.Size = UDim2.new(1, -40, 1, 0)
+        title.Position = UDim2.new(0, 15, 0, 0)
+        title.Font = Enum.Font.GothamBold
+        title.Text = "Select Currency"
+        title.TextColor3 = Color3.fromRGB(232, 234, 237)
+        title.TextSize = 14
+        title.TextXAlignment = Enum.TextXAlignment.Left
+        
+        local closeButton = Instance.new("TextButton")
+        closeButton.Name = "CloseButton"
+        closeButton.Parent = header
+        closeButton.BackgroundTransparency = 1
+        closeButton.Position = UDim2.new(1, -40, 0, 0)
+        closeButton.Size = UDim2.new(0, 40, 1, 0)
+        closeButton.Font = Enum.Font.GothamBold
+        closeButton.Text = "×"
+        closeButton.TextColor3 = Color3.fromRGB(232, 234, 237)
+        closeButton.TextSize = 20
+        
+        local searchBox = Instance.new("TextBox")
+        searchBox.Name = "SearchBox"
+        searchBox.Parent = frame
+        searchBox.BackgroundColor3 = Color3.fromRGB(48, 49, 52)
+        searchBox.BorderSizePixel = 0
+        searchBox.Position = UDim2.new(0, 15, 0, 55)
+        searchBox.Size = UDim2.new(1, -30, 0, 35)
+        searchBox.Font = Enum.Font.Gotham
+        searchBox.PlaceholderText = "Search currencies..."
+        searchBox.PlaceholderColor3 = Color3.fromRGB(154, 160, 166)
+        searchBox.Text = ""
+        searchBox.TextColor3 = Color3.fromRGB(232, 234, 237)
+        searchBox.TextSize = 12
+        
+        local searchCorner = Instance.new("UICorner")
+        searchCorner.CornerRadius = UDim.new(0, 10)
+        searchCorner.Parent = searchBox
+        
+        local scrollFrame = Instance.new("ScrollingFrame")
+        scrollFrame.Name = "ScrollFrame"
+        scrollFrame.Parent = frame
+        scrollFrame.BackgroundTransparency = 1
+        scrollFrame.BorderSizePixel = 0
+        scrollFrame.Position = UDim2.new(0, 10, 0, 100)
+        scrollFrame.Size = UDim2.new(1, -20, 1, -110)
+        scrollFrame.ScrollBarThickness = 6
+        scrollFrame.ScrollBarImageColor3 = Color3.fromRGB(80, 80, 80)
+        scrollFrame.ScrollBarImageTransparency = 0.5
+        scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+        
+        local layout = Instance.new("UIListLayout")
+        layout.Parent = scrollFrame
+        layout.SortOrder = Enum.SortOrder.LayoutOrder
+        layout.Padding = UDim.new(0, 5)
+        
+        layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+            scrollFrame.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y)
+        end)
+        
+        local function updateCurrencyButtons()
+            for _, child in ipairs(scrollFrame:GetChildren()) do
+                if child:IsA("TextButton") then
+                    child:Destroy()
+                end
+            end
+            
+            local searchText = string.lower(searchBox.Text)
+            
+            for _, currency in ipairs(currencyData) do
+                if searchText == "" or string.find(string.lower(currency.Name), searchText) or string.find(string.lower(currency.Code), searchText) then
+                    local currencyButton = Instance.new("TextButton")
+                    currencyButton.Name = currency.Code
+                    currencyButton.Parent = scrollFrame
+                    currencyButton.BackgroundColor3 = Color3.fromRGB(48, 49, 52)
+                    currencyButton.BorderSizePixel = 0
+                    currencyButton.Size = UDim2.new(1, 0, 0, 40)
+                    currencyButton.Font = Enum.Font.Gotham
+                    currencyButton.Text = currency.Code .. " - " .. currency.Name .. " (" .. currency.Symbol .. ")"
+                    currencyButton.TextColor3 = Color3.fromRGB(232, 234, 237)
+                    currencyButton.TextSize = 11
+                    currencyButton.TextXAlignment = Enum.TextXAlignment.Left
+                    
+                    local buttonCorner = Instance.new("UICorner")
+                    buttonCorner.CornerRadius = UDim.new(0, 10)
+                    buttonCorner.Parent = currencyButton
+                    
+                    local padding = Instance.new("UIPadding")
+                    padding.Parent = currencyButton
+                    padding.PaddingLeft = UDim.new(0, 15)
+                    
+                    currencyButton.MouseButton1Click:Connect(function()
+                        if isSource then
+                            sourceCurrency = currency.Code
+                            sourceCurrencyButton.Text = currency.Code .. " - " .. currency.Name
+                        else
+                            targetCurrency = currency.Code
+                            targetCurrencyButton.Text = currency.Code .. " - " .. currency.Name
+                        end
+                        
+                        local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+                        local tween = TweenService:Create(frame, tweenInfo, {Size = UDim2.new(0, 0, 0, 400)})
+                        tween:Play()
+                        tween.Completed:Connect(function()
+                            frame.Visible = false
+                            frame.Size = UDim2.new(0, 300, 0, 400)
+                        end)
+                    end)
+                end
+            end
+        end
+        
+        searchBox:GetPropertyChangedSignal("Text"):Connect(updateCurrencyButtons)
+        closeButton.MouseButton1Click:Connect(function()
+            local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+            local tween = TweenService:Create(frame, tweenInfo, {Size = UDim2.new(0, 0, 0, 400)})
+            tween:Play()
+            tween.Completed:Connect(function()
+                frame.Visible = false
+                frame.Size = UDim2.new(0, 300, 0, 400)
+            end)
+        end)
+        
+        updateCurrencyButtons()
+    end
+    
+    createCurrencySelectionFrame(leftCurrencyFrame, true)
+    createCurrencySelectionFrame(rightCurrencyFrame, false)
+    
+    local function showCurrencySelection(isSource)
+        local frame = isSource and leftCurrencyFrame or rightCurrencyFrame
+        local otherFrame = isSource and rightCurrencyFrame or leftCurrencyFrame
+        
+        otherFrame.Visible = false
+        frame.Visible = true
+        frame.Size = UDim2.new(0, 0, 0, 400)
+        
+        local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+        local tween = TweenService:Create(frame, tweenInfo, {Size = UDim2.new(0, 300, 0, 400)})
+        tween:Play()
+    end
+    
+    local function convertCurrency()
+        local amountText = amountBox.Text
+        local amount = tonumber(amountText)
+        
+        if not amount or amount <= 0 then
+            resultLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
+            resultLabel.Text = "Please enter a valid amount"
+            rateLabel.Text = "Exchange rate: --"
+            return
+        end
+        
+        resultLabel.TextColor3 = Color3.fromRGB(154, 160, 166)
+        resultLabel.Text = "Converting..."
+        rateLabel.Text = "Exchange rate: Loading..."
+        
+        local rate = getExchangeRate(sourceCurrency, targetCurrency, amount)
+        
+        if rate then
+            local sourceCurr = findCurrencyByCode(sourceCurrency)
+            local targetCurr = findCurrencyByCode(targetCurrency)
+            local convertedAmount = amount * rate
+            
+            resultLabel.TextColor3 = Color3.fromRGB(138, 180, 248)
+            resultLabel.Text = string.format("%s %.2f = %s %.2f", sourceCurr.Symbol, amount, targetCurr.Symbol, convertedAmount)
+            rateLabel.Text = string.format("1 %s = %.6f %s", sourceCurrency, rate, targetCurrency)
+        else
+            resultLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
+            resultLabel.Text = "Failed to get exchange rate. Please try again."
+            rateLabel.Text = "Exchange rate: --"
+        end
+    end
+    
+    sourceCurrencyButton.MouseButton1Click:Connect(function()
+        showCurrencySelection(true)
+    end)
+    
+    targetCurrencyButton.MouseButton1Click:Connect(function()
+        showCurrencySelection(false)
+    end)
+    
+    swapButton.MouseButton1Click:Connect(function()
+        local tempCurrency = sourceCurrency
+        local tempText = sourceCurrencyButton.Text
+        
+        sourceCurrency = targetCurrency
+        sourceCurrencyButton.Text = targetCurrencyButton.Text
+        
+        targetCurrency = tempCurrency
+        targetCurrencyButton.Text = tempText
+        
+        if amountBox.Text ~= "" then
+            convertCurrency()
+        end
+    end)
+    
+    convertButton.MouseButton1Click:Connect(convertCurrency)
+    
+    amountBox.FocusLost:Connect(function(enterPressed)
+        if enterPressed and amountBox.Text ~= "" then
+            convertCurrency()
+        end
+    end)
+    
+    copyButton.MouseButton1Click:Connect(function()
+        if resultLabel.Text ~= "Enter amount and click CONVERT" and resultLabel.TextColor3 ~= Color3.fromRGB(255, 100, 100) then
+            setclipboard(resultLabel.Text)
+        end
+    end)
+    
+    closeButton.MouseButton1Click:Connect(function()
+        screenGui:Destroy()
+    end)
+    
+    convertCurrency()
+end
+
+LoadCurrencyScript()
